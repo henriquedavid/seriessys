@@ -24,8 +24,6 @@ public class Category {
 		this.series = series;
 	}
 
-
-
 	public int getId() {
 		return id;
 	}
@@ -49,7 +47,5 @@ public class Category {
 	public void setSeries(ArrayList<Series> series) {
 		this.series = series;
 	}
-	
-	
 
 }

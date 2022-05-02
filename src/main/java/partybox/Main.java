@@ -7,10 +7,17 @@ import java.util.Date;
 
 import partybox.config.InitiateDatabase;
 import partybox.model.Category;
-import partybox.model.People;
+import partybox.model.Content;
 import partybox.model.Series;
+import partybox.model.Type;
+import partybox.services.CategoryService;
+import partybox.services.ContentService;
+import partybox.services.EpisodeService;
+import partybox.services.SeasonService;
 import partybox.services.SeriesService;
+import partybox.services.TypeService;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * Catálogos de séries, os usuários podem se inscreverem 
@@ -20,32 +27,41 @@ import reactor.core.publisher.Flux;
 
 public class Main {
 	
-	public static final ArrayList<People> people = new ArrayList<People>();
 	public static final ArrayList<Category> category = new ArrayList<Category>();
 
 	public static void main(String[] args) {
 		
-//		category.get(0).getSeries().add(new Series(1,"Teste-1", null, null));
-//		category.get(0).getSeries().add(new Series(2,"Teste-2", null, null));
-//		category.get(0).getSeries().add(new Series(3,"Teste-3", null, null));
-//		category.get(0).getSeries().add(new Series(4,"Teste-4", null, null));
-//
-//		people.add(new People("Pessoa-1"));
-//		people.add(new People("Pessoa-2"));
-//		people.add(new People("Pessoa-3"));
+		CategoryService categoryService = new CategoryService();
+		TypeService typeService = new TypeService();
+		EpisodeService episodeService = new EpisodeService();
+		SeasonService seasonService = new SeasonService(episodeService);
 		
-		InitiateDatabase initialize = new InitiateDatabase();
-		SeriesService service = new SeriesService();
+		ContentService contentService = new ContentService(categoryService, typeService, seasonService);
+
+//		Flux<Content> series = contentService.getAllContent();
+//		Mono<Type> series = typeService.getTypeById(2);
+//		series.subscribe(p1 -> System.out.println("Conteúdos: " + p1.getName()));
 		
-		Flux<Category> events = initialize.init();
+		{
+			/**
+			 * Getting all contents
+			 */
+			System.out.println("-1-");
+			Flux<Content> series = contentService.getAllContent();
+			series.subscribe(p -> System.out.println("Itens: " + p.toString()));
+		}
 		
-		Flux<Series> series = Flux.concat(events.map(mapper -> Flux.fromIterable(mapper.getSeries())));
+		{
+			System.out.println("-2-");
+			Mono<Content> series = contentService.getContentByIdComplete(1);
+			series.subscribe(p -> System.out.println("Itens: " + p.toString()));
+		}
 		
-//		service.addSerieToCategory(1, 5, "Exemplo1", "Esse é apenas um exemplo", new Date("2022/10/10"));
-		
-//		Flux<Series> events = service.getFirst10SeriesFromCategory(1).delaySubscription(Duration.ofMillis(5000));
-		
-		series.subscribe(p1 -> System.out.println("Entrou= " + p1.getName()));
+		{
+			System.out.println("-3-");
+			Flux<Content> series = contentService.getContentByTypeName("Film");
+			series.subscribe(p -> System.out.println("Itens: " + p.toString()));
+		}
 		
 		
 		
