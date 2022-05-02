@@ -8,6 +8,7 @@ import java.util.Date;
 import partybox.config.InitiateDatabase;
 import partybox.model.Category;
 import partybox.model.Content;
+import partybox.model.Episode;
 import partybox.model.Series;
 import partybox.model.Type;
 import partybox.services.CategoryService;
@@ -33,14 +34,11 @@ public class Main {
 		
 		CategoryService categoryService = new CategoryService();
 		TypeService typeService = new TypeService();
-		EpisodeService episodeService = new EpisodeService();
-		SeasonService seasonService = new SeasonService(episodeService);
+		SeasonService seasonService = null;
+		EpisodeService episodeService = new EpisodeService(seasonService);
+		seasonService = new SeasonService(episodeService);
 		
 		ContentService contentService = new ContentService(categoryService, typeService, seasonService);
-
-//		Flux<Content> series = contentService.getAllContent();
-//		Mono<Type> series = typeService.getTypeById(2);
-//		series.subscribe(p1 -> System.out.println("Conteúdos: " + p1.getName()));
 		
 		{
 			/**
@@ -61,6 +59,12 @@ public class Main {
 			System.out.println("-3-");
 			Flux<Content> series = contentService.getContentByTypeName("Film");
 			series.subscribe(p -> System.out.println("Itens: " + p.toString()));
+		}
+		
+		{
+			System.out.println("-4-");
+			Flux<Episode> episodes = episodeService.findAllEpisodes();
+			episodes.subscribe(p -> System.out.println("Itens: " + p.toString()));
 		}
 		
 		
