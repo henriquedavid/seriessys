@@ -5,17 +5,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-import partybox.config.InitiateDatabase;
 import partybox.model.Category;
 import partybox.model.Content;
 import partybox.model.Episode;
-import partybox.model.Series;
 import partybox.model.Type;
 import partybox.services.CategoryService;
 import partybox.services.ContentService;
 import partybox.services.EpisodeService;
 import partybox.services.SeasonService;
-import partybox.services.SeriesService;
 import partybox.services.TypeService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -34,9 +31,8 @@ public class Main {
 		
 		CategoryService categoryService = new CategoryService();
 		TypeService typeService = new TypeService();
-		SeasonService seasonService = null;
-		EpisodeService episodeService = new EpisodeService(seasonService);
-		seasonService = new SeasonService(episodeService);
+		EpisodeService episodeService = new EpisodeService();
+		SeasonService seasonService = new SeasonService(episodeService);
 		
 		ContentService contentService = new ContentService(categoryService, typeService, seasonService);
 		
@@ -67,7 +63,11 @@ public class Main {
 			episodes.subscribe(p -> System.out.println("Itens: " + p.toString()));
 		}
 		
-		
+		{
+			System.out.println("-5-");
+			Mono<Content> series = contentService.getContentByName("Doutor Estranho no Multiverso da Loucura");
+			series.subscribe(p -> System.out.println("Itens: " + p.toString()));
+		}
 		
 	}
 

@@ -27,10 +27,7 @@ public class SeasonService {
 	}
 	
 	public Flux<Season> getSeasonsFromContent(int idContent){
-		return getSeasons().flatMap(season -> {
-			season.setIdContent(idContent);
-			return Mono.just(season);
-		});
+		return getSeasons().filterWhen(season -> Mono.just(season.getIdContent() == idContent));
 	}
 	
 	public Mono<Season> getSeasonById(int idSeason){

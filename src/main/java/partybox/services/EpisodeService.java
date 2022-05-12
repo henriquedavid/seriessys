@@ -11,13 +11,9 @@ import reactor.core.publisher.Mono;
 
 public class EpisodeService {
 	
-	private SeasonService seasonService;
 	
-	
-	
-	public EpisodeService(SeasonService seasonService) {
+	public EpisodeService() {
 		super();
-		this.seasonService = seasonService;
 	}
 
 	public Flux<Episode> findAllEpisodes(){
@@ -41,15 +37,6 @@ public class EpisodeService {
 	
 	public Flux<Episode> findEpisodesBySeasonId(int idSeason){
 		return findAllEpisodes().filterWhen(episode -> Mono.just(episode.getIdSeason() == idSeason));
-	}
-	
-	public Flux<Episode> findEpisodeBySeasonName(String seasonName){
-		Mono<List<Episode>> episodes_ = seasonService.getSeasonByName(seasonName).flatMap(season -> {
-					Mono<List<Episode>> episodes = findAllEpisodes().filterWhen(episode -> Mono.just(episode.getIdSeason() == season.getId())).collectList();
-					return episodes;
-		});
-		
-		return episodes_.flatMapIterable(item -> item);
 	}
 
 }

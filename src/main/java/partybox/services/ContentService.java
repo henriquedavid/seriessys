@@ -3,6 +3,7 @@ package partybox.services;
 import java.util.Arrays;
 import java.util.List;
 
+import partybox.exceptions.ContentException;
 import partybox.model.Content;
 import partybox.model.Season;
 import partybox.model.Type;
@@ -67,8 +68,11 @@ public class ContentService {
 		return contents_.flatMapIterable(content -> content);
 	}
 	
-	public Flux<Content> getContentByName(String name){
-		return getAllContent().filterWhen(content -> Mono.just(content.getName().equals(name)));
+	public Mono<Content> getContentByName(String name){
+		return getAllContent().filterWhen(content -> Mono.just(content.getName().equals(name)))
+				.onErrorMap(err -> {
+					return new ContentException("Não foi possível obter o conteúdo por nome");
+				}).last();
 	}
 	
 	public Flux<Content> getSearchNameContent(String name){
