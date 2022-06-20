@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.ufrn.programacaoreativa.mvc.model.Episode;
+import br.ufrn.programacaoreativa.mvc.model.EpisodesDTO;
 import br.ufrn.programacaoreativa.mvc.service.EpisodeService;
 
 @RestController
@@ -34,7 +35,7 @@ public class EpisodeController {
 	}
 	
 	@GetMapping("/my/{iduser}")
-	public ResponseEntity<List<Episode>> getMyEpisodes(@PathVariable("iduser") Long idUser){
+	public ResponseEntity<List<EpisodesDTO>> getMyEpisodes(@PathVariable("iduser") Long idUser){
 		return ResponseEntity.ok(service.getMyEpisodesBought(idUser));
 	}
 	

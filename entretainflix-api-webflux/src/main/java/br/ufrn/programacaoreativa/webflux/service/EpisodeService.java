@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.loadbalancer.reactive.ReactorLoadBalancerExchangeFilterFunction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,9 @@ public class EpisodeService {
 	@Autowired
 	private EpisodeRepository repository;
 	
+	@Autowired
+	private ReactorLoadBalancerExchangeFilterFunction lbFunction;
+	
 	public Flux<Episode> getAllEpisodes(){
 		return repository.findAll();
 	}
@@ -51,21 +55,22 @@ public class EpisodeService {
 	
 	public Mono<Episode> payEpisode(Long idUser, Long idEpisode) {
 		
-		WebClient client = WebClient.create();
-		Mono<User> responseSec = client.get()
-				.uri("http://localhost:8082/user/"+idUser)
-				.accept(MediaType.APPLICATION_JSON)
+		Mono<User> responseSec = WebClient.builder()
+				.baseUrl("http://entretainflixuserwebflux")
+				.filter(lbFunction)
+				.build()
+				.get()
+				.uri("/user/"+idUser)
 				.retrieve()
 				.bodyToMono(User.class);
-
 		
-		
-		
-		WebClient client2 = WebClient.create();
-		Mono<Cobranca> responseSec2 = client.post()
-				.uri("http://localhost:8083/cobranca")
+		Mono<Cobranca> responseSec2 = WebClient.builder()
+				.baseUrl("http://entretainflixpagamentowebflux")
+				.filter(lbFunction)
+				.build()
+				.post()
+				.uri("/cobranca")
 				.header("content-type", "application/json")
-//				.accept(MediaType.APPLICATION_JSON)
 				.bodyValue("{\"userId\": " + idUser + ", \"episodeId\" : " + idEpisode + " , \"valor\" : " + 3.25 + "}")
 				.retrieve()
 				.bodyToMono(Cobranca.class);
@@ -80,19 +85,17 @@ public class EpisodeService {
 	
 	
 	public Mono<String> getMyEpisodesBought(Long idUser) {
-		WebClient client = WebClient.create();
-		Mono<String> responseSpec = client.get()
-				.uri("http://localhost:8083/cobranca/user/"+idUser)
-				.exchangeToMono(response -> {
-					if(response.statusCode().equals(HttpStatus.OK)) {
-						return response.bodyToMono(String.class);
-					} else if(response.statusCode().is4xxClientError()) {
-						return Mono.just("Error response");
-					} else {
-						return response.createException().flatMap(Mono::error);
-					}
-				});
+
+		Mono<String> responseSpec = WebClient.builder()
+				.baseUrl("http://entretainflixpagamentowebflux")
+				.filter(lbFunction)
+				.build()
+				.get()
+				.uri("/cobranca/user/"+idUser)
+				.retrieve()
+				.bodyToMono(String.class);
 		return responseSpec;
+		
 	}
 	
 	public Mono<Episode> createEpisode(Episode episode) {

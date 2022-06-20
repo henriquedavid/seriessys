@@ -2,18 +2,11 @@ package br.ufrn.programacaoreativa.webflux.model;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import org.springframework.data.annotation.Id;
 
-@Entity
 public class Cobranca {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	
 	private Double valor;
