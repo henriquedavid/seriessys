@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Content {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
 	
@@ -29,6 +29,7 @@ public class Content {
 	private Type type;
 	
 	@ManyToMany
+	@JsonIgnore
 	@JoinTable(name="category_like", 
 				joinColumns = @JoinColumn(name="content_id"),
 				inverseJoinColumns = @JoinColumn(name="category_id"))

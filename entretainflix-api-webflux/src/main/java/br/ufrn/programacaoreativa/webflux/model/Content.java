@@ -11,7 +11,8 @@ public class Content {
 	private String name;
 	private Long idType;
 	private Long idCategory;
-	private List<Season> seasons;
+	
+	public Content() {}
 	
 	public Content(Long id, String name, Long idType, Long idCategory) {
 		super();
@@ -19,7 +20,6 @@ public class Content {
 		this.name = name;
 		this.idType = idType;
 		this.idCategory = idCategory;
-		this.seasons = new ArrayList<Season>();
 	}
 	
 	public Content(Content c) {
@@ -28,19 +28,8 @@ public class Content {
 		this.idCategory = c.getIdCategory();
 		this.idType = c.getIdType();
 		this.name = c.getName();
-		this.seasons = c.getSeasons();
 	}
 	
-	
-	public Content(Long id, String name, Long idType, Long idCategory, List<Season> seasons) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.idType = idType;
-		this.idCategory = idCategory;
-		this.seasons = seasons;
-	}
-
 	public Long getId() {
 		return id;
 	}
@@ -67,20 +56,10 @@ public class Content {
 	}
 
 
-	public List<Season> getSeasons() {
-		return seasons;
-	}
-
-
-	public void setSeasons(List<Season> seasons) {
-		this.seasons = seasons;
-	}
-
-
 	@Override
 	public String toString() {
 		return "Content [id=" + id + ", name=" + name + ", idType=" + idType + ", idCategory=" + idCategory
-				+ ", seasons=" + seasons.toString() + "]";
+				+ "]";
 	}
 	
 	

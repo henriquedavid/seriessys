@@ -53,6 +53,10 @@ public class EpisodeService {
 			return null;
 	}
 	
+	public User getUserThatBoughtEpisodes(Long idUser){
+		return this.restTemplate.getForObject("http://userentretainflix/user/"+idUser, User.class);
+	}
+	
 	public Episode payEpisode(Long idUser, Long idEpisode) {
 		
 		Episode episode = getEpisodeById(idEpisode);
@@ -61,12 +65,9 @@ public class EpisodeService {
 		
 		User user_ = this.restTemplate.getForObject("http://userentretainflix/user/"+idUser, User.class);		
 		
-		System.out.println("Passou aqui");
-//		String body = "{\"userId\": " + user_.getId() + ", \"episodeId\" : " + episode.getId() + " , \"valor\" : " + 3.25 + "}";
 		HttpEntity<DadosPagamentoDTO> request = new HttpEntity<DadosPagamentoDTO>(new DadosPagamentoDTO(user_.getId(), episode.getId(), 3.25));
 		String request_ = this.restTemplate.postForObject("http://entretainflixpagamento/cobranca", request, String.class);
 		
-		System.out.println(request_);
 		return episode;
 	}
 	

@@ -83,6 +83,18 @@ public class EpisodeService {
 		return entrada;
 	}
 	
+	public Mono<User> getUserThatBoughtEpisodes(Long idUser){
+		Mono<User> responseSec = WebClient.builder()
+				.baseUrl("http://entretainflixuserwebflux")
+				.filter(lbFunction)
+				.build()
+				.get()
+				.uri("/user/"+idUser)
+				.retrieve()
+				.bodyToMono(User.class);
+		
+		return responseSec;
+	}
 	
 	public Mono<String> getMyEpisodesBought(Long idUser) {
 

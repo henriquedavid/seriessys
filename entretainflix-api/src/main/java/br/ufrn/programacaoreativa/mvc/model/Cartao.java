@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 public class Cartao {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	private String apelido;

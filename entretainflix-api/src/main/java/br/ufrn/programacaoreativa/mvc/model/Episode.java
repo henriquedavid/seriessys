@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Episode {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
 	private Duration duration;
@@ -26,6 +26,19 @@ public class Episode {
 	
 	public Episode() {}
 	
+	
+	
+	public Episode(Long id, String name, Duration duration, Date launchDate, Season season) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.duration = duration;
+		this.launchDate = launchDate;
+		this.season = season;
+	}
+
+
+
 	public Episode(Long id, String name, Duration duration, Date launchDate) {
 		super();
 		this.id = id;

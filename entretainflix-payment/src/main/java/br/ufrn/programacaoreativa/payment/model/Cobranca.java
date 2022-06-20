@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 public class Cobranca {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Integer id;
 	
 	private Integer usuario;

@@ -38,7 +38,7 @@ public class SeasonService {
 		return repository.findById(seasonId);
 	}
 	
-	public Mono<Season> deleteSeason(Long seasonId) {
-		return repository.findById(seasonId);
+	public Mono<Void> deleteSeason(Long seasonId) {
+		return repository.deleteById(seasonId);
 	}
 }

@@ -11,27 +11,15 @@ public class Season {
 	private Long id;
 	private String name;
 	private Long idContent;
-	private List<Episode> episodes;
 	
-	
+	public Season() {}
 	
 	public Season(Long id, String name, Long idContent) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.idContent = idContent;
-		this.episodes = new ArrayList<Episode>();
 	}
-
-	public Season(Long id, String name, Long idContent, List<Episode> episodes) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.idContent = idContent;
-		this.episodes = episodes;
-	}
-	
-	
 	
 	public Long getId() {
 		return id;
@@ -53,16 +41,10 @@ public class Season {
 	public void setIdContent(Long idContent) {
 		this.idContent = idContent;
 	}
-	public List<Episode> getEpisodes() {
-		return episodes;
-	}
-	public void setEpisodes(List<Episode> episodes) {
-		this.episodes = episodes;
-	}
 
 	@Override
 	public String toString() {
-		return "Season [id=" + id + ", name=" + name + ", idContent=" + idContent + ", episodes=" + episodes + "]";
+		return "Season [id=" + id + ", name=" + name + ", idContent=" + idContent + "]";
 	}
 	
 	

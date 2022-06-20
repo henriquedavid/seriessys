@@ -13,6 +13,7 @@ public class Type {
 		this.name = name;
 	}
 	
+	public Type() {}
 	
 
 	public Long getId() {

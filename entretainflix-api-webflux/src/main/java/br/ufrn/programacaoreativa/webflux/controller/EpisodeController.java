@@ -1,7 +1,6 @@
 package br.ufrn.programacaoreativa.webflux.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.ufrn.programacaoreativa.webflux.model.Episode;
 import br.ufrn.programacaoreativa.webflux.model.EpisodesDTO;
+import br.ufrn.programacaoreativa.webflux.model.User;
 import br.ufrn.programacaoreativa.webflux.repository.EpisodeRepository;
 import br.ufrn.programacaoreativa.webflux.service.EpisodeService;
 import reactor.core.publisher.Flux;
@@ -31,6 +31,11 @@ public class EpisodeController {
 	@GetMapping
 	public Flux<Episode> getAllEpisodes(){
 		return service.getAllEpisodes();
+	}
+	
+	@GetMapping("/user/{iduser}")
+	public Mono<User> getUserThatBoughtEpisodes(@PathVariable("iduser") Long idUser){
+		return service.getUserThatBoughtEpisodes(idUser);
 	}
 	
 	@GetMapping("/watch/{iduser}/{idepisode}")

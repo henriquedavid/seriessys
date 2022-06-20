@@ -12,6 +12,8 @@ public class Cobranca {
 	private Double valor;
 	
 	private Date dataefetivacao;
+	
+	public Cobranca() {}
 
 	public Integer getId() {
 		return id;
