@@ -54,13 +54,13 @@ public class EpisodeController {
 	}
 	
 	@PostMapping
-	public Mono<Episode> createEpisode(@RequestBody Episode episode){
+	public Mono<Episode> createEpisode(@RequestBody Mono<Episode> episode){
 		return service.createEpisode(episode);
 	}
 	
-	@PutMapping("/{id}")
-	public Mono<Episode> atualizarEpisode(@PathVariable("/{id}") Long episodeId, @RequestBody Episode episode){
-		return service.updateEpisode(episodeId, episode);
+	@PutMapping
+	public Mono<Episode> atualizarEpisode(@RequestBody Mono<Episode> episode){
+		return service.updateEpisode(episode);
 	}
 	
 	@DeleteMapping("/{id}")

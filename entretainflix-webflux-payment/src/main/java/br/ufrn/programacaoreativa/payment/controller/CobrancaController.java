@@ -26,7 +26,7 @@ public class CobrancaController {
 	private CobrancaService service;
 	
 	@PostMapping
-	public Mono<Cobranca> receberPagamento(@RequestBody DadosCobrancaDTO dadosCobrancaDTO ) {
+	public Mono<Cobranca> receberPagamento(@RequestBody Mono<DadosCobrancaDTO> dadosCobrancaDTO ) {
 		return service.createCobranca(dadosCobrancaDTO);
 	}
 	

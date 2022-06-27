@@ -21,20 +21,22 @@ public class CategoryService {
 		return repository.findAll();
 	}
 	
-	public Mono<Category> findCategoryById(Long id) {
-		return repository.findById(id);
+	public Mono<Category> findCategoryById(Mono<Long> id) {
+		return id.flatMap(item -> {
+			return repository.findById(id);
+		});
 	}
 	
 	public Flux<Category> searchCategoryByName(String name) {
 		return repository.searchCategoryByName(name);
 	}
 	
-	public Mono<Category> addCategory(Category category) {
-		return repository.save(category);
+	public Mono<Category> addCategory(Mono<Category> category) {
+		return repository.saveAll(category).next();
 	}
 	
-	public Mono<Category> updateCategory(Long categoryId, Category category) {
-		return repository.save(category);
+	public Mono<Category> updateCategory(Mono<Category> category) {
+		return repository.saveAll(category).next();
 	}
 	
 	public Mono<Void> deleteCategory(Long categoryId) {

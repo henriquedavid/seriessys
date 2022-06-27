@@ -37,17 +37,17 @@ public class TypeController {
 	}
 	
 	@PostMapping
-	public Mono<Type> createType(@RequestBody Type type){
+	public Mono<Type> createType(@RequestBody Mono<Type> type){
 		return service.createType(type);
 	}
 	
 	@GetMapping("/search/name")
-	public Flux<Type> searchByName(@RequestBody Type type){
-		return service.searchTypeByName(type.getName());
+	public Flux<Type> searchByName(@RequestBody Mono<Type> type){
+		return service.searchTypeByName(type);
 	}
 	
 	@PutMapping("/{id}")
-	public Mono<Type> updateType(@PathVariable("id") Long typeId, @RequestBody Type type){
+	public Mono<Type> updateType(@PathVariable("id") Long typeId, @RequestBody Mono<Type> type){
 		return service.updateType(typeId, type);
 	}
 	

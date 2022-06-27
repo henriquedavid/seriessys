@@ -5,23 +5,24 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 
 public class Episode {
 	@Id
 	private Long id;
 	private String name;
 	private Long duration;
-	private LocalDateTime launchDate;
+//	private LocalDateTime launchDate;
+	@Column(value = "episode_id")
 	private Long idSeason;
 	
 	public Episode() {}
 	
-	public Episode(Long id, String name, Long duration, LocalDateTime launchDate, Long idSeason) {
+	public Episode(Long id, String name, Long duration, Long idSeason) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.duration = duration;
-		this.launchDate = launchDate;
 		this.idSeason = idSeason;
 	}
 	
@@ -43,12 +44,6 @@ public class Episode {
 	public void setDuration(Long duration) {
 		this.duration = duration;
 	}
-	public LocalDateTime getLaunchDate() {
-		return launchDate;
-	}
-	public void setLaunchDate(LocalDateTime launchDate) {
-		this.launchDate = launchDate;
-	}
 	public Long getIdSeason() {
 		return idSeason;
 	}
@@ -59,7 +54,7 @@ public class Episode {
 
 	@Override
 	public String toString() {
-		return "Episode [id=" + id + ", name=" + name + ", duration=" + duration + ", launchDate=" + launchDate
+		return "Episode [id=" + id + ", name=" + name + ", duration=" + duration
 				+ ", idSeason=" + idSeason + "]";
 	}
 	

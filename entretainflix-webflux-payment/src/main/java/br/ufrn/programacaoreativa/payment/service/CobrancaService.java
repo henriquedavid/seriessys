@@ -30,18 +30,21 @@ public class CobrancaService {
 		return repository.findById(id);
 	}
 	
-	public Mono<Cobranca> createCobranca(DadosCobrancaDTO cobrancaDTO) {
-		Cobranca cobranca = new Cobranca();
-		cobranca.setDatapagamento(LocalDateTime.now());
-		cobranca.setEpisode(cobrancaDTO.getEpisodeId());
-		cobranca.setUsuario(cobrancaDTO.getUserId());
-		Random random = new Random(); 
-		if((random.nextInt()%2) == 0) {
-			cobranca.setStatusTransacao("APROVADO");
-		} else {
-			cobranca.setStatusTransacao("RECUSADO");
-		}
-		return repository.save(cobranca);
+	public Mono<Cobranca> createCobranca(Mono<DadosCobrancaDTO> cobrancaDTO) {
+		return cobrancaDTO.flatMap(item -> {
+			Cobranca c = new Cobranca();
+			c.setDatapagamento(LocalDateTime.now());
+			c.setEpisode(item.getEpisodeId());
+			c.setUsuario(item.getUserId());
+			Random random = new Random(); 
+			if((random.nextInt()%2) == 0) {
+				 c.setStatusTransacao("APROVADO");
+			} else {
+				c.setStatusTransacao("RECUSADO");
+			}
+			
+			return repository.save(c);
+		});
 	}
 	
 	public Flux<Cobranca> getCobrancasJaFeitas(Integer idUser) {

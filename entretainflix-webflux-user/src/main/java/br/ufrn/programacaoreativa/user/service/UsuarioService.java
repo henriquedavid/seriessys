@@ -25,12 +25,12 @@ public class UsuarioService {
 		return repository.findById(id);
 	}
 	
-	public Mono<Usuario> createUser(Usuario user) {
-		return repository.save(user);
+	public Mono<Usuario> createUser(Mono<Usuario> user) {
+		return repository.saveAll(user).next();
 	}
 	
-	public Mono<Usuario> updateUser(Usuario user) {
-		return repository.save(user);
+	public Mono<Usuario> updateUser(Mono<Usuario> user) {
+		return repository.saveAll(user).next();
 	}
 
 }

@@ -64,6 +64,8 @@ public class EpisodeService {
 				.retrieve()
 				.bodyToMono(User.class);
 		
+		System.out.println("PASSOU aqui");
+		
 		Mono<Cobranca> responseSec2 = WebClient.builder()
 				.baseUrl("http://entretainflixpagamentowebflux")
 				.filter(lbFunction)
@@ -110,12 +112,12 @@ public class EpisodeService {
 		
 	}
 	
-	public Mono<Episode> createEpisode(Episode episode) {
-		return repository.save(episode);
+	public Mono<Episode> createEpisode(Mono<Episode> episode) {
+		return repository.saveAll(episode).next();
 	}
 	
-	public Mono<Episode> updateEpisode(Long episodeId, Episode episode) {
-		return repository.save(episode);
+	public Mono<Episode> updateEpisode(Mono<Episode> episode) {
+		return repository.saveAll(episode).next();
 	}
 	
 	public Mono<Void> deleteEpisode(Long episodeId) {

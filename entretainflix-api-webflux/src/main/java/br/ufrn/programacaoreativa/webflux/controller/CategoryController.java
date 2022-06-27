@@ -34,7 +34,7 @@ public class CategoryController {
 	}
 	
 	@GetMapping("/{id}")
-	public Mono<Category> getCategoryById(@PathVariable("id") Long idCategory){
+	public Mono<Category> getCategoryById(@PathVariable("id") Mono<Long> idCategory){
 		return service.findCategoryById(idCategory);
 	}
 	
@@ -44,13 +44,13 @@ public class CategoryController {
 	}
 	
 	@PostMapping
-	public Mono<Category> addCategory(@RequestBody Category category){
+	public Mono<Category> addCategory(@RequestBody Mono<Category> category){
 		return service.addCategory(category);
 	}
 	
-	@PutMapping("/{id}")
-	public Mono<Category> updateCategory(@PathVariable("id") Long categoryId, @RequestBody Category category){
-		return service.updateCategory(categoryId, category);
+	@PutMapping
+	public Mono<Category> updateCategory(@RequestBody Mono<Category> category){
+		return service.updateCategory(category);
 	}
 	
 	@DeleteMapping("/{id}")

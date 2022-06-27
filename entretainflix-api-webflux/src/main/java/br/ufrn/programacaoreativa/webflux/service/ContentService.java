@@ -25,12 +25,12 @@ public class ContentService {
 		return repository.findById(id);
 	}
 	
-	public Mono<Content> addContent(Content content) {
-		return repository.save(content);
+	public Mono<Content> addContent(Mono<Content> content) {
+		return repository.saveAll(content).next();
 	}
 	
-	public Mono<Content> updateContent(Long contentId, Content content) {
-		return repository.save(content);
+	public Mono<Content> updateContent(Mono<Content> content) {
+		return repository.saveAll(content).next();
 	}
 	
 	public Mono<Void> deleteContent(Long contentId) {

@@ -38,13 +38,13 @@ public class ContentController {
 	}
 	
 	@PostMapping
-	public Mono<Content> createContent(@RequestBody Content content){
+	public Mono<Content> createContent(@RequestBody Mono<Content> content){
 		return service.addContent(content);
 	}
 	
-	@PutMapping("/{id}")
-	public Mono<Content> updateContent(@PathVariable("id") Long contentId, @RequestBody Content content){
-		return  service.updateContent(contentId, content);
+	@PutMapping
+	public Mono<Content> updateContent(@RequestBody Mono<Content> content){
+		return  service.updateContent(content);
 	}
 	
 	@DeleteMapping("/{id}")

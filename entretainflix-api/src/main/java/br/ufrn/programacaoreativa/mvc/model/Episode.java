@@ -17,7 +17,7 @@ public class Episode {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	private Duration duration;
+	private Long duration;
 	private Date launchDate;
 	
 	@ManyToOne
@@ -28,7 +28,7 @@ public class Episode {
 	
 	
 	
-	public Episode(Long id, String name, Duration duration, Date launchDate, Season season) {
+	public Episode(Long id, String name, Long duration, Date launchDate, Season season) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -39,7 +39,7 @@ public class Episode {
 
 
 
-	public Episode(Long id, String name, Duration duration, Date launchDate) {
+	public Episode(Long id, String name, Long duration, Date launchDate) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -59,10 +59,10 @@ public class Episode {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Duration getDuration() {
+	public Long getDuration() {
 		return duration;
 	}
-	public void setDuration(Duration duration) {
+	public void setDuration(Long duration) {
 		this.duration = duration;
 	}
 	public Date getLaunchDate() {

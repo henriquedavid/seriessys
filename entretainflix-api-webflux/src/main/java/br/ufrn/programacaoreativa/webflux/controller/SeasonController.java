@@ -39,18 +39,18 @@ public class SeasonController {
 	}
 	
 	@GetMapping("/search/content/{id}")
-	public Flux<Season> searchSeasonByNameByContentId(@RequestBody BuscaDTO busca, @PathVariable("id") Long contentId){
+	public Flux<Season> searchSeasonByNameByContentId(@RequestBody Mono<BuscaDTO> busca, @PathVariable("id") Long contentId){
 		return service.searchSeasonByNameInContent(busca, contentId);
 	}
 	
 	@PostMapping
-	public Mono<Season> createSeason(@RequestBody Season season){
+	public Mono<Season> createSeason(@RequestBody Mono<Season> season){
 		return service.createSeason(season);
 	}
 	
-	@PutMapping("/{id}")
-	public Mono<Season> updateSeason(@PathVariable("id") Long id, @RequestBody Season season){
-		return service.updateSeason(id, season);
+	@PutMapping
+	public Mono<Season> updateSeason(@RequestBody Mono<Season> season){
+		return service.updateSeason(season);
 	}
 	
 	@DeleteMapping("/{id}")

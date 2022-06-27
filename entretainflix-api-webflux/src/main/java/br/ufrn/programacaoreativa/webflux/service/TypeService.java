@@ -26,16 +26,18 @@ public class TypeService {
 		return repository.findById(id);
 	}
 	
-	public Mono<Type> createType(Type type) {
-		return repository.save(type);
+	public Mono<Type> createType(Mono<Type> type) {
+		return repository.saveAll(type).next();
 	}
 	
-	public Flux<Type> searchTypeByName(String type) {
-		return repository.findTypeByName(type);
+	public Flux<Type> searchTypeByName(Mono<Type> type) {
+		return type.flatMapMany(item -> {
+			return repository.findTypeByName(item.getName());
+		});
 	}
 	
-	public Mono<Type> updateType(Long typeId, Type type) {
-		return repository.save(type);
+	public Mono<Type> updateType(Long typeId, Mono<Type> type) {
+		return repository.saveAll(type).next();
 	}
 	
 	public Mono<Void> deleteType(Long typeId) {

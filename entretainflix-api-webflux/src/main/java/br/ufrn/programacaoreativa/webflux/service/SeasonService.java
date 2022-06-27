@@ -26,16 +26,18 @@ public class SeasonService {
 		return repository.findById(id);
 	}
 	
-	public Flux<Season> searchSeasonByNameInContent(BuscaDTO busca, Long contentId) {
-		return repository.searchSeasonByNameInContent(busca.getName(), contentId);
+	public Flux<Season> searchSeasonByNameInContent(Mono<BuscaDTO> busca, Long contentId) {
+		return busca.flatMapMany(item -> {
+			return repository.searchSeasonByNameInContent(item.getName(), contentId);
+		});
 	}
 	
-	public Mono<Season> createSeason(Season season) {
-		return repository.save(season);
+	public Mono<Season> createSeason(Mono<Season> season) {
+		return repository.saveAll(season).next();
 	}
 	
-	public Mono<Season> updateSeason(Long seasonId, Season season) {
-		return repository.findById(seasonId);
+	public Mono<Season> updateSeason(Mono<Season> season) {
+		return repository.saveAll(season).next();
 	}
 	
 	public Mono<Void> deleteSeason(Long seasonId) {
