@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.reactive.ReactorLoadBalancerExchangeFilterFunction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -31,6 +32,9 @@ import br.ufrn.programacaoreativa.webflux.model.Episode;
 import br.ufrn.programacaoreativa.webflux.model.EpisodesDTO;
 import br.ufrn.programacaoreativa.webflux.model.User;
 import br.ufrn.programacaoreativa.webflux.repository.EpisodeRepository;
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
@@ -45,6 +49,9 @@ public class EpisodeService {
 	@Autowired
 	private ReactorLoadBalancerExchangeFilterFunction lbFunction;
 	
+	@Autowired
+	private KafkaTemplate<String, String> kafkaTemplate;
+	
 	public Flux<Episode> getAllEpisodes(){
 		return repository.findAll();
 	}
@@ -53,6 +60,17 @@ public class EpisodeService {
 		return repository.findById(id);
 	}
 	
+	public Mono<Episode> buildFallbackPayEpisode(Throwable t){
+		return Mono.just(new Episode());
+	}
+	
+	public Mono<Episode> retryFallbackPayEpisode(Throwable t){
+		return Mono.just(new Episode((long)-1, "Retrying to pay episode", (long) 0, (long) 1));
+	}
+	
+	@CircuitBreaker(name="payepisodeservice", fallbackMethod="buildFallbackPayEpisode")
+	@Retry(name="retrypayepisodeservice", fallbackMethod = "retryFallbackPayEpisode")
+	@Bulkhead(name="bulkheadpayepisodeservice", type = Bulkhead.Type.SEMAPHORE, fallbackMethod="buildFallbackPayEpisode")
 	public Mono<Episode> payEpisode(Long idUser, Long idEpisode) {
 		
 		Mono<User> responseSec = WebClient.builder()
@@ -80,11 +98,26 @@ public class EpisodeService {
 		Mono<Episode> entrada = Mono.zip(responseSec, responseSec2)
 				.flatMap(tuples -> {
 					return getEpisodeById(idEpisode);
+				}).doOnNext(item -> {
+					kafkaTemplate.send("newcontentpublish", idUser + " bought " + idEpisode);
 				});
 
 		return entrada;
 	}
 	
+	public Mono<User> buildFallbackUserThatBoughtEpisodes(Throwable tw){
+		return Mono.just(new User());
+	}
+	
+	
+	public Mono<User> retryFallbackUserThatBoughtEpisodes(Throwable tw){
+		return Mono.just(new User(-1, "Retring to send", "", ""));
+	}
+	
+	
+	@CircuitBreaker(name="getuserthatboughtepisodesservice", fallbackMethod="buildFallbackUserThatBoughtEpisodes")
+	@Retry(name="retryuserthatboughtepisodes", fallbackMethod = "retryFallbackUserThatBoughtEpisodes")
+	@Bulkhead(name="bulkheaduserthatboughtepisodes", type = Bulkhead.Type.SEMAPHORE, fallbackMethod="buildFallbackUserThatBoughtEpisodes")
 	public Mono<User> getUserThatBoughtEpisodes(Long idUser){
 		Mono<User> responseSec = WebClient.builder()
 				.baseUrl("http://entretainflixuserwebflux")
@@ -98,6 +131,17 @@ public class EpisodeService {
 		return responseSec;
 	}
 	
+	public Mono<String> buildFallbackEpisodesBought(Throwable tw){
+		return Mono.just("Error while loading requisition");
+	}
+	
+	public Mono<String> retryFallbackEpisodesBought(Throwable tw) {
+		return Mono.just("Retrying to reload");
+	}
+	
+	@CircuitBreaker(name="getepisodesboughtservice", fallbackMethod="buildFallbackEpisodesBought")
+	@Retry(name="retryepisodesbought", fallbackMethod = "retryFallbackEpisodesBought")
+	@Bulkhead(name="bulkheadgetepisodesbought", type = Bulkhead.Type.SEMAPHORE, fallbackMethod="buildFallbackEpisodesBought")
 	public Mono<String> getMyEpisodesBought(Long idUser) {
 
 		Mono<String> responseSpec = WebClient.builder()

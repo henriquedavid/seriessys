@@ -1,0 +1,14 @@
+### BUILD ###
+FROM maven:3.8.5-jdk-11 as builder
+ARG DIR_ROOT=/usr/src/app
+WORKDIR ${DIR_ROOT}
+COPY . ${DIR_ROOT}
+RUN mvn clean package -DskipTests
+
+### RUN ###
+FROM openjdk:11
+ARG DIR_BUILD=/usr/src/app/target
+WORKDIR /opt/app
+COPY --from=builder ${DIR_BUILD}/*.jar app.jar
+ENTRYPOINT ["java","-jar","app.jar"]
+EXPOSE 8000

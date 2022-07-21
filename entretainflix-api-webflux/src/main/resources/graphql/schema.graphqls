@@ -1,0 +1,20 @@
+type Query {
+	getAllSubscriptions : [SubscriptionEmail]
+	getUserSubscription(id: ID): SubscriptionEmail
+}
+
+type Mutation{
+	addUserInSubscription(userInput : SubscriptionInput!) : SubscriptionEmail
+	deleteUserInSubscription(id : ID) : Boolean
+}
+
+type SubscriptionEmail {
+	id: ID
+	name: String
+	email: String
+}
+
+input SubscriptionInput{
+	name: String!
+	email: String!
+}

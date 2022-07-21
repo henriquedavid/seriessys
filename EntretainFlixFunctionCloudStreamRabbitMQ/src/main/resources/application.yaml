@@ -1,0 +1,17 @@
+server.port: 9003
+spring:
+   application:
+      name: function-service
+   rabbitmq:
+      host: localhost
+      port: 5672
+      username: test
+      password: test
+      connection-timeout: 5s
+   cloud:
+      stream:
+         bindings:
+            criptografartoken-in-0:
+               destination: entradadados
+            criptografartoken-out-0:
+               destination: saidadados

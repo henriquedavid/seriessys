@@ -80,6 +80,7 @@ public class Usuario {
 	public void setChangedOn(LocalDateTime changedOn) {
 		this.changedOn = changedOn;
 	}
-
+	
+	
 
 }
